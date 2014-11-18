@@ -1,0 +1,3 @@
+## Euler Project
+
+Using Haskell.
