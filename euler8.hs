@@ -6,7 +6,7 @@ number = 73167176531330624919225119674426574742355349194934969835203127745063262
 -- parse n consecutive digits
 -- could probably figure out a map also.
 parse :: Int -> String -> [[Int]]
-parse n all@(x:xs)
+parse n all@(_:xs)
     | length all == n = [intToDigitList all]
     | otherwise = (intToDigitList (take n all)) : parse n xs
     where intToDigitList = map (\n -> read [n] :: Int) 
