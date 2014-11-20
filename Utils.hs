@@ -1,4 +1,7 @@
-module Utils (isPrime, sieveSundaram, sieveErast) where
+module Utils (isPrime, sieveSundaram, sieveErast, squaresList, cartProd, cartProd3) where
+
+squaresList :: Integral a => [a]
+squaresList = map (\x -> x*x) [1..]
 
 -- fun, but is slow because checks every single number in list
 isPrime' :: Integral a => a -> Bool
@@ -22,6 +25,9 @@ sieveSundaram n = map (\n -> 2*n+1) $ filter (`notElem` filterList) [1..limit]
 
 cartProd :: [a] -> [b] -> [(a,b)]
 cartProd xs ys = [(x,y) | x <- xs, y <- ys]
+
+cartProd3 :: [a] -> [b] -> [c] -> [(a,b,c)]
+cartProd3 xs ys zs = [(x,y,z) | x <- xs, y <- ys, z <- zs]
 
 --sieveErastosthenes
 sieveErast :: Integral a => a -> [a]
