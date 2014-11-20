@@ -14,7 +14,8 @@ isPrime n = go 2
     where go x 
             | x * x > n = True 
             | n `rem` x == 0 = False 
-            | otherwise = go (x+1)
+            | x `rem` 2 == 0 = go (x+1)
+            | otherwise = go (x+2)
 
 --sieve
 sieveSundaram :: Integral a => a -> [a]
