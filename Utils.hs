@@ -1,4 +1,5 @@
-module Utils (isPrime, sieveSundaram, sieveErast, squaresList, cartProd, cartProd3) where
+module Utils (isPrime, sieveSundaram, sieveErast, squaresList, cartProd, cartProd3,
+    intToDigitList) where
 
 squaresList :: Integral a => [a]
 squaresList = map (\x -> x*x) [1..]
@@ -39,3 +40,11 @@ sieveErast' 1 xs = tail xs
 sieveErast' n xs
     | isPrime n = sieveErast' (n-1) $ (filter (\x -> x == n || x `rem` n /= 0) xs)
     | otherwise = sieveErast' (n-1) xs
+
+
+-- convert Integer to Digits
+
+--through string
+intToDigitList :: (Show a, Integral a) => a -> [Integer]
+intToDigitList n = map (\x -> read [x] :: Integer) (show n)
+
