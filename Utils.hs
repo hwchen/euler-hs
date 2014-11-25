@@ -1,6 +1,7 @@
 module Utils (isPrime, sieveSundaram, sieveErast, squaresList, cartProd, cartProd3,
-    intToDigitList, divisorsList) where
+    intToDigitList, divisorsList, alphaToNum) where
 
+import Data.Char
 import Data.List
 
 squaresList :: Integral a => [a]
@@ -55,3 +56,10 @@ divisorsList :: Integral a => a -> [a]
 divisorsList 0 = []
 divisorsList n = nub (divisorsListHalf ++ map (n `div`) (reverse divisorsListHalf))
     where divisorsListHalf = filter (\x -> n `rem` x == 0) [1..floor $ sqrt $ fromIntegral n]
+
+--convert Alphabet to Int, case insensitive
+alphaToNum :: Char -> Int
+alphaToNum c
+    | lowerC `elem` ['a'..'z'] = (fromEnum $ toLower c) - 96
+    | otherwise = 0
+    where lowerC = toLower c
