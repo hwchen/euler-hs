@@ -1,5 +1,7 @@
 module Utils (isPrime, sieveSundaram, sieveErast, squaresList, cartProd, cartProd3,
-    intToDigitList) where
+    intToDigitList, divisorsList) where
+
+import Data.List
 
 squaresList :: Integral a => [a]
 squaresList = map (\x -> x*x) [1..]
@@ -48,3 +50,8 @@ sieveErast' n xs
 intToDigitList :: (Show a, Integral a) => a -> [Integer]
 intToDigitList n = map (\x -> read [x] :: Integer) (show n)
 
+-- divisorsList (refactor the nub out later)
+divisorsList :: Integral a => a -> [a]
+divisorsList 0 = []
+divisorsList n = nub (divisorsListHalf ++ map (n `div`) (reverse divisorsListHalf))
+    where divisorsListHalf = filter (\x -> n `rem` x == 0) [1..floor $ sqrt $ fromIntegral n]
