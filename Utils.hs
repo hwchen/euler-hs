@@ -1,5 +1,5 @@
 module Utils (isPrime, sieveSundaram, sieveErast, squaresList, cartProd, cartProd3,
-    intToDigitList, divisorsList, alphaToNum) where
+    intToDigitList, divisorsList, alphaToNum, intToList, fac) where
 
 import Data.Char
 import Data.List
@@ -63,3 +63,14 @@ alphaToNum c
     | lowerC `elem` ['a'..'z'] = (fromEnum $ toLower c) - 96
     | otherwise = 0
     where lowerC = toLower c
+
+-- convert Integer to List of Integers, with argument for base
+intToList :: Integral a => a -> a -> [a]
+intToList x base = reverse $ go x
+    where go 0 = []
+          go y = let (a,b) = quotRem y base in [b] ++ go a
+
+-- factorial
+fac :: Integral a => a -> a
+fac 0 = 0
+fac x = product [1..x]
