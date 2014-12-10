@@ -72,5 +72,5 @@ intToList x base = reverse $ go x
 
 -- factorial
 fac :: Integral a => a -> a
-fac 0 = 0
+fac 0 = 1
 fac x = product [1..x]

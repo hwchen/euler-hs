@@ -2,6 +2,7 @@
 -- palindromes in both base 10 and 2.
 -- sum all under 1,000,000o
 
+
 isPalindrome :: Eq a => [a] -> Bool 
 isPalindrome s = s == reverse s
 
