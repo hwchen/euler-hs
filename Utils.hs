@@ -1,5 +1,17 @@
-module Utils (isPrime, sieveSundaram, sieveErast, squaresList, cartProd, cartProd3,
-    intToDigitList, divisorsList, alphaToNum, intToList, fac) where
+module Utils 
+    (isPrime,
+    sieveSundaram,
+    sieveErast,
+    squaresList,
+    cartProd,
+    cartProd3,
+    intToDigitList,
+    divisorsList,
+    alphaToNum,
+    intToList,
+    fac,
+    listToInt
+    ) where
 
 import Data.Char
 import Data.List
@@ -74,3 +86,8 @@ intToList x base = reverse $ go x
 fac :: Integral a => a -> a
 fac 0 = 1
 fac x = product [1..x]
+
+-- convert list of Integers to Integer
+-- uses strings, so not most efficient
+listToInt :: (Show a, Integral a) => [a] -> Int
+listToInt xs = read (concatMap (\x -> show x) xs) :: Int
