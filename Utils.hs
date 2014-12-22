@@ -63,11 +63,14 @@ sieveErast' n xs
 intToDigitList :: (Show a, Integral a) => a -> [Integer]
 intToDigitList n = map (\x -> read [x] :: Integer) (show n)
 
--- divisorsList (refactor the nub out later)
+-- divisorsList 
 divisorsList :: Integral a => a -> [a]
 divisorsList 0 = []
-divisorsList n = nub (divisorsListHalf ++ map (n `div`) (reverse divisorsListHalf))
-    where divisorsListHalf = filter (\x -> n `rem` x == 0) [1..floor $ sqrt $ fromIntegral n]
+divisorsList n 
+    | squareRoot^2 == n = (init divisorsListHalf) ++ map (n `div`) (reverse divisorsListHalf) 
+    | otherwise = divisorsListHalf ++ map (n `div`) (reverse divisorsListHalf)
+    where divisorsListHalf = filter (\x -> n `rem` x == 0) [1.. squareRoot]
+          squareRoot = floor $ sqrt $ fromIntegral n
 
 --convert Alphabet to Int, case insensitive
 alphaToNum :: Char -> Int

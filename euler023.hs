@@ -1,5 +1,6 @@
 --d euler 23
 -- non abundant sums
+import Data.List
 import Utils (divisorsList)
 
 properDivisorsList :: Integral a => a -> [a]
@@ -11,16 +12,22 @@ isAbundant n
     | (sum $ properDivisorsList n) > n = True
     | otherwise = False
 
-isSumOfTwoAbundant :: Integral a => a -> Bool
-isSumOfTwoAbundant n = undefined
+abListTo :: Integral a => a -> [a]
+abListTo n = filter isAbundant [1.. n]
 
-abundantListTo n = filter isAbundant [1..n]
+sumTwoAbListTo :: Integral a => a -> [a]
+sumTwoAbListTo n = [a+b | 
+                           a <- abListTo (n `div` 2), 
+                           b <- abListTo n, 
+                           a+b <= n]
 
--- can't check permutations, it's too slow,
-notSumTwoAbundantListTo n = 
-    filter 
-    (\x -> x `notElem` 
-    [a+ b| a <- abundantListTo (x `div` 2), b <- take (x `div` 2) $ reverse (abundantListTo x)]) 
-    [1..n]
 
-main = print $ sum $ notSumTwoAbundantListTo 28123
+-- sum TwoAbListTo works.
+-- problem is with the filter? Too much memory?
+-- maybe `notElem` is too expensive. So filter pred...
+
+--notSumTwoAbListTo :: Integral a => a -> [a]
+--notSumTwoAbListTo n = filter isSumTwoAb [1..n]
+
+main :: IO()
+main = print $ length $ sort $ sumTwoAbListTo 28123
