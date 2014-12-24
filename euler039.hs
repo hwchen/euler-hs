@@ -7,7 +7,13 @@
 -- Don't worry about limit, go until c <= 1000
 
 -- weird, adding in calcPerimeters after rightTriangles actually lowers the runtime
--- from 10 seconds to 5 seconds? and rest of program is negligible. total about 6s
+-- from 10 seconds to 5 seconds? Even weirder, calculating (a+b+c) directly inside
+-- the list comprehension is still 10 seconds! as opposed to mapping it outside.
+
+-- and rest of program is negligible. total about 6s
+
+-- think it took me an hour, maybe 1.5, to figure it out. Mostly wrangling with
+-- the histogram stuff
 
 rightTriangles :: Int -> [(Int,Int,Int)]
 rightTriangles limit = [(a,b,c)
