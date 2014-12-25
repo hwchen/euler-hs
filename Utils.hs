@@ -92,6 +92,6 @@ fac x = product [1..x]
 
 -- convert list of Integers to Integer
 -- uses strings, so not most efficient
-listToInt :: (Show a, Integral a) => [a] -> Int
+listToInt :: (Read a, Show a, Integral a) => [a] -> a 
 listToInt [] = 0
-listToInt xs = read (concatMap (\x -> show x) xs) :: Int
+listToInt xs = read (concatMap (\x -> show x) xs)
