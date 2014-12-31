@@ -30,27 +30,61 @@ primeList = filter isPrime [1..]
 
 -- duplicates takeWhile and filter. how to merge? Also what's the 
 -- bound if there is no primeChain? This is the important point.
-primeChainToFrom :: Int -> Int -> [Int]
-primeChainToFrom b a = concat $ filter (\ns -> sum ns == b) chains 
+primeChainToFrom' :: Int -> Int -> [Int]
+primeChainToFrom' b a = concat $ filter (\ns -> sum ns == b) chains 
     where chains = takeWhile (\xs -> sum xs <= b) $ -- slow, does sum for each
                    inits $ dropWhile (/= a) primeList
 
 -- returns empty chain if no chain == target
-primeChainToFrom' :: Int -> Int -> [Int]
-primeChainToFrom' b a = go [a] a
+primeChainToFrom'' :: Int -> Int -> [Int]
+primeChainToFrom'' b a = go [a] a
     where go xs sum' | sum' == b = xs
                      | sum' < b = go (xs ++ [next]) (sum' + next)
                      | otherwise = []
-                     where next = head $ dropWhile (< last xs) primeList
+                     where next = head $ dropWhile (<= last xs) primeList
 
-primeChains :: Int -> [[Int]]
-primeChains n = map (primeChainToFrom n) $ takeWhile (<= n `div` 50) primeList
+primeChains' :: Int -> [[Int]]
+primeChains' n = map (primeChainToFrom' n) $ takeWhile (<= n `div` 2) primeList
 
-primeChainsMax :: Int -> Int
-primeChainsMax n = case chainLengths of
+primeChainsMax' :: Int -> Int
+primeChainsMax' n = case chainLengths of
     xs | not $ null xs -> maximum xs
        | otherwise -> 0
-    where chainLengths = map length $ primeChains n
+    where chainLengths = map length $ primeChains' n
+
+-- upperBound = one million. Don't run sum, just generate, it will
+-- probably be faster.
+
+-- well, this way looks faster.
+
+-- I should still generate only up to target sum though.
+
+-- hmmm.... It looks like I blindly generated an extremely high sum bound.
+-- when ChainTo is 10000, the sum Bound is already over 5 million. That means
+-- that when I increased by chainTo bound to 1 million, I was generating
+-- a super high sum bound. So, I don't know exactly what the ballpark is
+-- but I can keep the chainBound at 1000 and just set a separate sumBound
+
+-- interesting, if I set the chainBound at 1000, I get wrong answer.
+-- this means that the chain goes past 1000 (or starts past).
+
+-- filter isPrime after sumBound improves from 26 to 20 seconds.
+-- (instead of checking both together in one filter)
+
+chainsFromTo :: Int -> Int -> [[Int]]
+chainsFromTo n0 n = inits $ takeWhile (<= n) $ dropWhile (< n0) primeList
+
+allChainsTo :: Int -> [[Int]]
+allChainsTo n = concatMap (\n0 -> chainsFromTo n0 n) $ takeWhile (<= n) primeList 
+
+tupleChainLengthSum :: Int -> [(Int,Int)]
+tupleChainLengthSum upperBound = map (\xs -> (length xs, sum xs)) $ allChainsTo upperBound  
+
+maxTupleChainLengthSum :: Int -> Int -> (Int,Int)
+maxTupleChainLengthSum chainBound sumBound= maximum $ 
+                                            filter (\(a,b) -> isPrime b) $
+                                            filter (\(a,b) -> b < sumBound) $ 
+                                            tupleChainLengthSum chainBound
 
 main :: IO()
-main = print $ maximum $ zip (map primeChainsMax $ takeWhile (<1000000) primeList) (takeWhile (<1000000) primeList)
+main = print $ maxTupleChainLengthSum 10000 1000000
