@@ -8,9 +8,16 @@
 
 -- or just do 5 straightaway.
 
+import qualified Data.Set as S
 import Utils (intToList, isPrime, listToInt)
 
-primeList = filter isPrime [1..]
+primeList = filter isPrime [1..100000000]
+primeSet = S.fromList primeList 
+
+isPrime' :: Int -> Bool
+isPrime' n = n `S.member` primeSet
+
+--
 
 isPrimePair :: Int -> Int -> Bool
 isPrimePair x y = isPrime pair && isPrime pair'
@@ -62,4 +69,5 @@ main =
     --print $ length [(a,b) | b <- takeWhile (<5000) primeList
     --                         , a <- takeWhile (<b) primeList
     --                         ]
-    print $ primePairSet5 10000
+    --print $ primePairSet5 10000
+    print $ primePairSet3 1000
