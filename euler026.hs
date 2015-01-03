@@ -15,7 +15,7 @@ gen1Fraction n k = n `div` k : gen1Fraction remainder k
 -- cuts off all zeros, 
 -- trying to reverse. Hard cut at 100
 cleanFraction :: Int -> Int -> [Int]
-cleanFraction n k = reverse $ take 200 $ dropWhile (==0) $ gen1Fraction n k
+cleanFraction n k = reverse $ take 7000 $ dropWhile (==0) $ gen1Fraction n k
 
 -- cycle must be either multiple of 6 or 7. All other ones have short periods.
 
@@ -32,7 +32,7 @@ isPeriod n xs = period' == period'' && period' == period'''
 findPeriod :: [Int] -> Int
 findPeriod [] = 0
 findPeriod xs = go 1
-    where go n | n > 200 = 0 -- hard cutoff, for testing
+    where go n | n > 7000 = 0 -- hard cutoff, for testing
                | isPeriod n xs = n 
                | otherwise = go (n+1)
 
@@ -45,6 +45,10 @@ main = print $ maximum $ findMaxPeriodTo 1000
 -- gut was right after seeing pattern of 1/6n giving longer periods as n increased.
 -- ah, 100 didn't catch it because I test 3 period to make sure 3 digits in a row
 -- doesn't abort.
+-- oops, doesn't work... some very long periods. as I increase upper bound.
+-- up to 5000, still giving higher periods. period 982 at number 983 is highest so far.
+-- 6000 and 7000 give same answer.
+-- How could I have done it better? 
 
 -- This seems a little like chaotic behavior: complex behavior arising out of simple
 -- rules. I wonder how this maps?
