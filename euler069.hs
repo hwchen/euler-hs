@@ -7,6 +7,7 @@
 
 -- Speedup: instead of using Set. When filtering, to check if isRelativePrime, stop if a
 -- common divisor is found.
+{-# LANGUAGE BangPatterns #-}
 
 import qualified Data.Set as S
 import Utils (divisorsList)
@@ -20,9 +21,9 @@ isRelativePrime n k = go 2
 -- phiList of set of divisors
 phiList' :: Int -> [Int]
 phiList' 0 = []
-phiList' n = map fst $ filter (\(_,xs) -> xs `S.intersection` divisorsN == S.fromList [1]) $ zip [1..] divisorsOfDivisors
-    where divisorsOfDivisors = map (S.fromList . divisorsList) [1..n]
-          divisorsN = S.fromList $ divisorsList n
+phiList' n = map fst $! filter (\(_,xs) -> xs `S.intersection` divisorsN == S.fromList [1]) $! zip [1..] divisorsOfDivisors
+    where !divisorsOfDivisors = map (S.fromList . divisorsList) [1..n]
+          !divisorsN = S.fromList $! divisorsList n
 
 -- phiList' ends up being much faster at large numbers.
 -- maybe even a couple of orders of magnitude.
@@ -40,8 +41,14 @@ phiRatio n = fromIntegral n / fromIntegral (length $ phiList' n)
 -- what's the greatest common divisor? looks like 840
 -- 840 might be enough space in list. No, so move onto 9240
 -- 92400 is 4.8125
+-- 924000 is 4.8125, in 4 min 40 s with bang patterns (did they prevent memory leak?
+
+-- divisorlist at 1 million takes too long. How to speed up? can't really memoize.
+
+-- usig multiples of 9240, found 960960, ratio 5.2135415, 50 minutes! And still not the right answer!
+
 testList :: [Int]
-testList = filter (\x -> x `rem` 92400 == 0) [1..1000000]
+testList = filter (\x -> x `rem` 9240 == 0) [1..1000000]
 
 -- I think i need to also memoize phiList'
 
