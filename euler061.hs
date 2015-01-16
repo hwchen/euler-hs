@@ -3,6 +3,8 @@
 -- chain must be cyclic
 -- and each polygonal type does not need to be represented in order.
 
+-- generate chains, or go for all combinations?
+
 import Utils (intToList)
 
 polyList :: (Int -> Int) -> [Int]
