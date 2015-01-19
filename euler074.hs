@@ -17,6 +17,7 @@
 -- add to length of count
 
 -- recalcultaing the last in the chain adds a *n to O().
+{-# LANGUAGE BangPatterns #-}
 
 import qualified Data.Set as S
 import Utils (intToList)
@@ -39,6 +40,7 @@ digitFac = sum . map fac' . flip intToList 10
 dfChainLoops = S.fromList [1, 2, 145, 169, 363601, 1454, 871, 45361, 872, 45362]
 
 -- stops at first element of a known loop.
+
 -- this is the big slowdown. (out of memory)
 -- ah, I need to memoize
 
@@ -46,7 +48,7 @@ digitFacChain :: Int -> [Int]
 digitFacChain n = case chainSpan of
     (xs, []) -> xs 
     (xs, ys) -> xs ++ [head ys]
-    where chainSpan = span (`S.notMember` dfChainLoops) $ iterate digitFac n
+    where chainSpan = span (`S.notMember` dfChainLoops) $! iterate digitFac n
 
 
 dfChainLength :: Int -> Int
@@ -61,8 +63,8 @@ dfChainLength n
     | chainEnd == 871 = chainLength + 1
     | chainEnd == 45362 = chainLength + 1
     | otherwise = chainLength
-    where chainEnd = last $ digitFacChain n
-          chainLength = length $ digitFacChain n
+    where chainEnd = last $! digitFacChain n
+          chainLength = length $! digitFacChain n
 
 chainLength60 :: [Int]
 chainLength60 = filter (==60) $ map dfChainLength [1..100000]
@@ -71,8 +73,15 @@ chainLength60 = filter (==60) $ map dfChainLength [1..100000]
 -- creating fac chain and length at once. And create a more 
 -- complicated recursive function.
 
-dfChainLength :: Int -> 
-dfChainLength' n
+-- why does even iterChainLengthTo run out of memory?
+-- different algorithm?
+-- where can I get a true loop? let me try in rust... later.
+iterChainLengthTo :: Int -> Int
+iterChainLengthTo x = loop 0 1
+    where loop count n | n == x+1 = count
+                       | (length $!(digitFacChain n)) == 60 = loop (count + 1) (n+1)
+                       | otherwise = loop count (n+1)
 
 main :: IO()
-main = print $ length $ filter (\n -> length n >10000) $ map digitFacChain [1..1000000]
+--main = print $ length $! filter (\n -> length n == 60) $! map digitFacChain [10000..100000]
+main = print $ iterChainLengthTo 100000

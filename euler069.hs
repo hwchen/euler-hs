@@ -12,21 +12,26 @@
 import qualified Data.Set as S
 import Utils (divisorsList)
 
+--preload divisorsOfDivisors
+divisorsOfDivisors :: [[Int]]
+divisorsOfDivisors = map divisorsList [1..1000000]
+
+
+-- phiList of set of divisors
+phiList' :: Int -> [Int]
+phiList' 0 = []
+phiList' n = map fst $ filter (\(_,xs) -> xs `S.intersection` divisorsN == S.fromList [1]) $ zip [1..] divisorsOfDivisorsToN
+    where divisorsOfDivisorsToN = map S.fromList $! take n divisorsOfDivisors 
+          divisorsN = S.fromList $! divisorsList n --take from preloaded?
+
+-- phiList' ends up being much faster at large numbers.
+-- maybe even a couple of orders of magnitude.
 isRelativePrime :: Int -> Int -> Bool
 isRelativePrime n k = go 2
     where go x | x > n = True 
                | (n `rem` x  == 0) && (k `rem` x == 0) = False
                | otherwise = go (x+1)
 
--- phiList of set of divisors
-phiList' :: Int -> [Int]
-phiList' 0 = []
-phiList' n = map fst $! filter (\(_,xs) -> xs `S.intersection` divisorsN == S.fromList [1]) $! zip [1..] divisorsOfDivisors
-    where !divisorsOfDivisors = map (S.fromList . divisorsList) [1..n]
-          !divisorsN = S.fromList $! divisorsList n
-
--- phiList' ends up being much faster at large numbers.
--- maybe even a couple of orders of magnitude.
 phiList :: Int -> [Int]
 phiList n = filter (flip isRelativePrime n) [1..n]
 
@@ -47,10 +52,14 @@ phiRatio n = fromIntegral n / fromIntegral (length $ phiList' n)
 
 -- usig multiples of 9240, found 960960, ratio 5.2135415, 50 minutes! And still not the right answer!
 
+--Round 2, preloading divisorsOfDiviors. But with no testlist filter?
+-- 1000 is 840, 1 second
+-- 100,000 is 40 seconds with testList filter 840 
+
 testList :: [Int]
-testList = filter (\x -> x `rem` 9240 == 0) [1..1000000]
+testList = filter (\x -> x `rem` 840 == 0) [1..1000000]
 
 -- I think i need to also memoize phiList'
 
 main :: IO()
-main = print $ maximum $ map (\n -> (phiRatio n, n)) testList
+main = print $ maximum $ map (\n -> (phiRatio n, n)) testList 
