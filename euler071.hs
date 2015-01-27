@@ -34,7 +34,6 @@ reduceFraction (n,d) = (n',d')
     where gcf = S.findMax $ 
                 S.intersection (S.fromList $ divisorsList n) 
                                (S.fromList $ divisorsList d)
-
           n' = n `div` gcf
           d' = d `div` gcf
 

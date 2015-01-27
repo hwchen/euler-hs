@@ -66,8 +66,8 @@ dfChainLength n
     where chainEnd = last $! digitFacChain n
           chainLength = length $! digitFacChain n
 
-chainLength60 :: [Int]
-chainLength60 = filter (==60) $ map dfChainLength [1..100000]
+chainLength60 :: [Int] -> [Int]
+chainLength60 = filter (==60) . map dfChainLength 
 
 -- new solution: if I need to memoize, I need to combine
 -- creating fac chain and length at once. And create a more 
@@ -84,4 +84,4 @@ iterChainLengthTo x = loop 0 1
 
 main :: IO()
 --main = print $ length $! filter (\n -> length n == 60) $! map digitFacChain [10000..100000]
-main = print $ iterChainLengthTo 100000
+main = print $ length $ chainLength60 [1..100000]

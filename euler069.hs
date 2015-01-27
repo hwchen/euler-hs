@@ -36,16 +36,16 @@ phiList :: Int -> [Int]
 phiList n = filter (flip isRelativePrime n) [1..n]
 
 phiRatio :: Int -> Float
-phiRatio n = fromIntegral n / fromIntegral (length $ phiList' n)
+phiRatio n = fromIntegral n / fromIntegral (length $ phiList n)
 
 
 -- Manual bootstrapping. (and discovery)
 -- also, it's probably a number divisible by 2 and 3 and 10..
 -- 840 is 4.375
--- 9240 is 4.8125
+-- 9240 is 4.8125 
 -- what's the greatest common divisor? looks like 840
 -- 840 might be enough space in list. No, so move onto 9240
--- 92400 is 4.8125
+-- 92400 is 4.8125, in 
 -- 924000 is 4.8125, in 4 min 40 s with bang patterns (did they prevent memory leak?
 
 -- divisorlist at 1 million takes too long. How to speed up? can't really memoize.
@@ -57,7 +57,15 @@ phiRatio n = fromIntegral n / fromIntegral (length $ phiList' n)
 -- 100,000 is 40 seconds with testList filter 840 
 
 testList :: [Int]
-testList = filter (\x -> x `rem` 840 == 0) [1..1000000]
+testList = takeWhile (< 100000) $ filter (\x -> x `rem` 140 == 0) [6,12..]
+-- changed to multiples of 6, does this really make it much faster? Weird, with 
+-- same filter if multiple of 140, it's faster than
+-- having a list [140,280] or [1,2..].
+-- < 10000, 9240, .6s
+-- < 100000, 60060, 1m
+-- < 1000000 (doesn't take 10 times as long, what's the bottleneck?)
+-- it's not just finding the divisors, it's creating lists of divisorslists for every number.
+-- also, creating sets each time is consuming?
 
 -- I think i need to also memoize phiList'
 
