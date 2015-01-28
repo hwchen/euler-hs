@@ -49,6 +49,8 @@ rectThree = zip [1..] countRectThree
 -- generate all (a,b) combinations?
 
 -- for rect(a,b), generate family of a
+-- just guessed pattern for a', seemed reasonable based on what I'd
+-- calculated by hand.
 rectA :: Int -> [(Int,Int)]
 rectA a = zip [1..] $ scanl (\acc x -> acc + x*a') a' [2,3..]
     where a' = sum [1..a]
