@@ -36,7 +36,7 @@ phiList :: Int -> [Int]
 phiList n = filter (flip isRelativePrime n) [1..n]
 
 phiRatio :: Int -> Float
-phiRatio n = fromIntegral n / fromIntegral (length $ phiList n)
+phiRatio n = fromIntegral n / fromIntegral (length $ phiList' n)
 
 
 -- Manual bootstrapping. (and discovery)
@@ -57,7 +57,7 @@ phiRatio n = fromIntegral n / fromIntegral (length $ phiList n)
 -- 100,000 is 40 seconds with testList filter 840 
 
 testList :: [Int]
-testList = takeWhile (< 100000) $ filter (\x -> x `rem` 140 == 0) [6,12..]
+testList = takeWhile (< 100000) $ [30,60..]
 -- changed to multiples of 6, does this really make it much faster? Weird, with 
 -- same filter if multiple of 140, it's faster than
 -- having a list [140,280] or [1,2..].

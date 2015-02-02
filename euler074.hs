@@ -50,7 +50,6 @@ digitFacChain n = case chainSpan of
     (xs, ys) -> xs ++ [head ys]
     where chainSpan = span (`S.notMember` dfChainLoops) $! iterate digitFac n
 
-
 dfChainLength :: Int -> Int
 dfChainLength n
     | chainLength == 0 = 0
@@ -69,6 +68,28 @@ dfChainLength n
 chainLength60 :: [Int] -> [Int]
 chainLength60 = filter (==60) . map dfChainLength 
 
+-- new try. don't return lists.
+
+digitFacChain' :: Int -> (Int,Int)
+digitFacChain' n = case chainSpan of
+    (xs, []) -> (length xs, 0) 
+    (xs, ys) -> (length xs, head ys)
+    where chainSpan = span (`S.notMember` dfChainLoops) $! iterate digitFac n
+
+dfChainLength' :: Int -> Int
+dfChainLength' n
+    | chainLength == 0 = 0
+    | chainEnd == 145 = chainLength +1
+    | chainEnd == 169 = chainLength + 3
+    | chainEnd == 363601 = chainLength + 3
+    | chainEnd == 1454 = chainLength + 3
+    | chainEnd == 871 = chainLength + 2
+    | chainEnd == 45361 = chainLength + 2
+    | chainEnd == 871 = chainLength + 2
+    | chainEnd == 45362 = chainLength + 2
+    | otherwise = chainLength
+    where (chainLength, chainEnd) = digitFacChain' n
+
 -- new solution: if I need to memoize, I need to combine
 -- creating fac chain and length at once. And create a more 
 -- complicated recursive function.
@@ -83,5 +104,6 @@ iterChainLengthTo x = loop 0 1
                        | otherwise = loop count (n+1)
 
 main :: IO()
---main = print $ length $! filter (\n -> length n == 60) $! map digitFacChain [10000..100000]
-main = print $ length $ chainLength60 [1..100000]
+--main = print $ length $ chainLength60 [1..100000]
+main = print $ map dfChainLength' [10000..1000000] -- runs out of memory aroun 14,500
+-- i feel like this would be easy in python.
